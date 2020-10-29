@@ -1,0 +1,19 @@
+{
+    "name": "employee-tracker",
+    "version": "1.0.0",
+    "description": "Employee tracker",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "dev": "nodemon app"
+    },
+    "author": "mongolmaa",
+    "license": "ISC",
+    "dependencies": {
+        "inquirer": "^7.3.3",
+        "express": "^4.16.4"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.6"
+    }
+}
