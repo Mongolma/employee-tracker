@@ -10,10 +10,6 @@
     "author": "mongolmaa",
     "license": "ISC",
     "dependencies": {
-        "inquirer": "^7.3.3",
-        "express": "^4.16.4"
-    },
-    "devDependencies": {
-        "nodemon": "^2.0.6"
+        "inquirer": "^7.3.3"
     }
 }
