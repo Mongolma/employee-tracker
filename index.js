@@ -1,11 +1,37 @@
 //Dependencies
-const fs = require("fs");
+const mysql = require("mysql");
 const inquirer = require("inquirer");
-const util = require("util");
-const path = require("path");
+
+//Create the connection information for the sql database
+const connection = mysql.createConnection({
+  host: "localhost",
+
+  // Port
+  port: 3006,
+
+  // Username
+  user: "root",
+
+  // Password
+  password: "",
+  database: "test",
+});
+
+connection.connect(function (err) {
+  if (err) throw err;
+  employeeTracker();
+});
+
+function employeeTracker() {
+  connection.query("SELECT name FROM employee", function (err, res) {
+    if (err) throw err;
+    // Log all results of the SELECT statement
+    console.log(res);
+    connection.end();
+  });
+}
 
 //Questions
-const writeFileAsync = util.promisify(fs.writeFile);
 function promptUser() {
   const questions = [
     {
