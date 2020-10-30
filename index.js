@@ -50,12 +50,12 @@ function promptUser() {
     },
     {
       type: "input",
-      name: "firstName",
+      name: "first_name",
       message: "What is the employee's first name?",
     },
     {
       type: "input",
-      name: "lastName",
+      name: "last_name",
       message: "What is the employee's last name?",
     },
     {
@@ -80,19 +80,19 @@ function promptUser() {
     },
     {
       type: "list",
-      name: "removeEmployee",
+      name: "remove_employee",
       message: "Which employeer do you need to remove?",
       choices: ["name", "name", "name", "name"],
     },
     {
       type: "list",
-      name: "roleUpdate",
+      name: "role_update",
       message: "Which employee's manager do you want to update?",
       choices: ["name", "name", "name", "name"],
     },
     {
       type: "list",
-      name: "updateManager",
+      name: "update_manager",
       message:
         "Which employee's do you want set as manager for the selected employee?",
       choices: ["name", "name", "name", "name"],
@@ -102,5 +102,3 @@ function promptUser() {
 }
 console.clear();
 promptUser();
-
-//General questions
