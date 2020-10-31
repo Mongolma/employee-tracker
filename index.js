@@ -20,23 +20,8 @@ const connection = mysql.createConnection({
 
 connection.connect(function (err) {
   if (err) throw err;
-  employeeTracker();
+  promptUser();
 });
-
-function employeeTracker() {
-  connection.query("SELECT * FROM employee", function (err, res) {
-    if (err) throw err;
-    // Log all results of the SELECT statement
-    console.log(res);
-    connection.end();
-  });
-}
-
-{
-  /* <script>
-console.table([{name: 'foo'}, {name: 'bar'}]);
-</script>  */
-}
 
 //Questions
 const questions = [
@@ -59,8 +44,7 @@ const questions = [
 
 function promptUser() {
   inquirer.prompt(questions).then(function (res) {
-    console.log(res);
-    switch (res.action) {
+    switch (res.optionForStart) {
       case "View All Employees":
         viewAllEmployees();
         break;
@@ -87,7 +71,15 @@ function promptUser() {
         break;
     }
   });
-
+  function viewAllEmployees() {
+    connection.query("SELECT * FROM employee", function (err, res) {
+      if (err) throw err;
+      // Log all results of the SELECT statement
+      console.table(res);
+      connection.end();
+    });
+  }
+  // function
   // {
   //   type: "input",
   //   name: "first_name",
@@ -139,6 +131,7 @@ function promptUser() {
   // }
 }
 console.clear();
-promptUser();
-
-<script src="bower_components/console.table/dist/console.table.js"></script>;
+// viewAllEmployees();
+{
+  /* <script src="bower_components/console.table/dist/console.table.js"></script>; */
+}
