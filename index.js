@@ -1,6 +1,7 @@
 //Dependencies
 const mysql = require("mysql");
 const inquirer = require("inquirer");
+const cTable = require("console.table");
 
 //Create the connection information for the sql database
 const connection = mysql.createConnection({
@@ -23,7 +24,7 @@ connection.connect(function (err) {
 });
 
 function employeeTracker() {
-  connection.query("SELECT name FROM employee", function (err, res) {
+  connection.query("SELECT * FROM employee", function (err, res) {
     if (err) throw err;
     // Log all results of the SELECT statement
     console.log(res);
