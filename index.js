@@ -77,67 +77,85 @@ function promptUser() {
       // Log all results of the SELECT statement
       console.table(res);
       connection.end();
+      promptUser();
     });
   }
 
   function addEmployee() {
-    inquirer.prompt([
-      {
-        type: "input",
-        name: "first_name",
-        message: "What is the employee's first name?",
-        validate: function (value) {
-          if (value === "") {
-            return false;
-          } else {
-            return true;
-          }
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          name: "firstName",
+          message: "What is the employee's first name?",
+          validate: function (value) {
+            if (value === "") {
+              return false;
+            } else {
+              return true;
+            }
+          },
         },
-      },
-      {
-        type: "input",
-        name: "last_name",
-        message: "What is the employee's last name?",
-        validate: function (value) {
-          if (value === "") {
-            return false;
-          } else {
-            return true;
-          }
+        {
+          type: "input",
+          name: "lastName",
+          message: "What is the employee's last name?",
+          validate: function (value) {
+            if (value === "") {
+              return false;
+            } else {
+              return true;
+            }
+          },
         },
-      },
-      {
-        type: "list",
-        name: "department",
-        message: "What is the department of the new employee?",
-        choices: [
-          "Sales department",
-          "Engineering department",
-          "Financial department",
-          "Legal team",
-        ],
-      },
-      {
-        type: "list",
-        name: "role",
-        message: "What is the role of the new employee?",
-        choices: [
-          "Sales lead",
-          "Sales person",
-          "Lead engineer",
-          "Software engineer",
-          "Account manager",
-          "Account",
-          "Legal team members",
-        ],
-      },
-      {
-        type: "list",
-        name: "manager",
-        message: "Who is the employeer's manager?",
-        choices: ["none", "name", "name", "name"],
-      },
-    ]);
+        // {
+        //   type: "list",
+        //   name: "department",
+        //   message: "What is the department of the new employee?",
+        //   choices: [
+        //     "Sales department",
+        //     "Engineering department",
+        //     "Financial department",
+        //     "Legal team",
+        //   ],
+        // },
+        // {
+        //   type: "list",
+        //   name: "role",
+        //   message: "What is the role of the new employee?",
+        //   choices: [
+        //     "Sales lead",
+        //     "Sales person",
+        //     "Lead engineer",
+        //     "Software engineer",
+        //     "Account manager",
+        //     "Account",
+        //     "Legal team members",
+        //   ],
+        // },
+        // {
+        //   type: "list",
+        //   name: "manager",
+        //   message: "Who is the employeer's manager?",
+        //   choices: ["none", "name", "name", "name"],
+        // },
+      ])
+      .then((answers) => {
+        connection.query(
+          "INSERT INTO employee SET ?",
+          {
+            first_name: answers.firstName,
+            last_name: answers.lastName,
+          },
+          function (err) {
+            if (err) throw new Error(err);
+
+            console.log("Employee added succesfully.");
+
+            promptUser();
+          }
+        );
+      });
   }
 
   // function addEmployee() {
@@ -184,6 +202,3 @@ function promptUser() {
 }
 console.clear();
 // viewAllEmployees();
-{
-  /* <script src="bower_components/console.table/dist/console.table.js"></script>; */
-}
