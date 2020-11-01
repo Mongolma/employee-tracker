@@ -79,17 +79,74 @@ function promptUser() {
       connection.end();
     });
   }
-  // function
-  // {
-  //   type: "input",
-  //   name: "first_name",
-  //   message: "What is the employee's first name?",
-  // },
-  // {
-  //   type: "input",
-  //   name: "last_name",
-  //   message: "What is the employee's last name?",
-  // },
+
+  function addEmployee() {
+    inquirer.prompt([
+      {
+        type: "input",
+        name: "first_name",
+        message: "What is the employee's first name?",
+        validate: function (value) {
+          if (value === "") {
+            return false;
+          } else {
+            return true;
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "last_name",
+        message: "What is the employee's last name?",
+        validate: function (value) {
+          if (value === "") {
+            return false;
+          } else {
+            return true;
+          }
+        },
+      },
+      {
+        type: "list",
+        name: "department",
+        message: "What is the department of the new employee?",
+        choices: [
+          "Sales department",
+          "Engineering department",
+          "Financial department",
+          "Legal team",
+        ],
+      },
+      {
+        type: "list",
+        name: "role",
+        message: "What is the role of the new employee?",
+        choices: [
+          "Sales lead",
+          "Sales person",
+          "Lead engineer",
+          "Software engineer",
+          "Account manager",
+          "Account",
+          "Legal team members",
+        ],
+      },
+      {
+        type: "list",
+        name: "manager",
+        message: "Who is the employeer's manager?",
+        choices: ["none", "name", "name", "name"],
+      },
+    ]);
+  }
+
+  // function addEmployee() {
+  //   connection.query("SELECT * FROM department", function (err, res) {
+  //     if (err) {
+
+  //     }
+  //   });
+  //
   // {
   //   type: "list",
   //   name: "role",
@@ -104,12 +161,7 @@ function promptUser() {
   //     "Legal team members",
   //   ],
   // },
-  // {
-  //   type: "list",
-  //   name: "manager",
-  //   message: "Who is the employeer's manager?",
-  //   choices: ["none", "name", "name", "name"],
-  // },
+  //
   // {
   //   type: "list",
   //   name: "remove_employee",
