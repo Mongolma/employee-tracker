@@ -67,8 +67,10 @@ function promptUser() {
         updateManagerRole();
         break;
       case "Exit":
-        exit();
+        connection.end();
         break;
+      default:
+        connection.end();
     }
   });
   function viewAllEmployees() {
@@ -108,6 +110,26 @@ function promptUser() {
             }
           },
         },
+        {
+          type: "list",
+          name: "role",
+          message: "What is the role of the new employee?",
+          choices: [
+            "Sales lead",
+            "Sales person",
+            "Lead engineer",
+            "Software engineer",
+            "Account manager",
+            "Account",
+            "Legal team members",
+          ],
+        },
+        {
+          type: "list",
+          name: "manager",
+          message: "Who is the employeer's manager?",
+          choices: ["none", "name", "name", "name"],
+        },
         // {
         //   type: "list",
         //   name: "department",
@@ -119,29 +141,10 @@ function promptUser() {
         //     "Legal team",
         //   ],
         // },
-        // {
-        //   type: "list",
-        //   name: "role",
-        //   message: "What is the role of the new employee?",
-        //   choices: [
-        //     "Sales lead",
-        //     "Sales person",
-        //     "Lead engineer",
-        //     "Software engineer",
-        //     "Account manager",
-        //     "Account",
-        //     "Legal team members",
-        //   ],
-        // },
-        // {
-        //   type: "list",
-        //   name: "manager",
-        //   message: "Who is the employeer's manager?",
-        //   choices: ["none", "name", "name", "name"],
-        // },
+        //
       ])
       .then((answers) => {
-        connection.query(
+        connetion.query(
           "INSERT INTO employee SET ?",
           {
             first_name: answers.firstName,
