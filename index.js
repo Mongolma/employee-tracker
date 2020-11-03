@@ -2,7 +2,10 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 const cTable = require("console.table");
-
+let deptArr = [];
+let roleArr = [];
+let emplArr = [];
+let managerArr = [];
 //Create the connection information for the sql database
 const connection = mysql.createConnection({
   host: "localhost",
@@ -43,7 +46,7 @@ const questions = [
 ];
 
 function promptUser() {
-  inquirer.prompt(questions).then(function (res) {
+  inquirer.prompt(questions).then((res) => {
     switch (res.optionForStart) {
       case "View All Employees":
         viewAllEmployees();
@@ -73,6 +76,10 @@ function promptUser() {
         connection.end();
     }
   });
+
+  // getDept();
+  // getRole();
+  // getManager();
   function viewAllEmployees() {
     connection.query("SELECT * FROM employee", function (err, res) {
       if (err) throw err;
@@ -84,81 +91,90 @@ function promptUser() {
   }
 
   function addEmployee() {
-    inquirer
-      .prompt([
-        {
-          type: "input",
-          name: "firstName",
-          message: "What is the employee's first name?",
-          validate: function (value) {
-            if (value === "") {
-              return false;
-            } else {
-              return true;
-            }
-          },
-        },
-        {
-          type: "input",
-          name: "lastName",
-          message: "What is the employee's last name?",
-          validate: function (value) {
-            if (value === "") {
-              return false;
-            } else {
-              return true;
-            }
-          },
-        },
-        {
-          type: "list",
-          name: "role",
-          message: "What is the role of the new employee?",
-          choices: [
-            "Sales lead",
-            "Sales person",
-            "Lead engineer",
-            "Software engineer",
-            "Account manager",
-            "Account",
-            "Legal team members",
-          ],
-        },
-        {
-          type: "list",
-          name: "manager",
-          message: "Who is the employeer's manager?",
-          choices: ["none", "name", "name", "name"],
-        },
-        // {
-        //   type: "list",
-        //   name: "department",
-        //   message: "What is the department of the new employee?",
-        //   choices: [
-        //     "Sales department",
-        //     "Engineering department",
-        //     "Financial department",
-        //     "Legal team",
-        //   ],
-        // },
-        //
-      ])
-      .then((answers) => {
-        connetion.query(
-          "INSERT INTO employee SET ?",
-          {
-            first_name: answers.firstName,
-            last_name: answers.lastName,
-          },
-          function (err) {
-            if (err) throw new Error(err);
+    connection.query("SELECT * FROM role ORDER BY title", function (err, res) {
+      if (err) throw err;
+      connection.query("SELECT * FROM employee", function (err, res1) {
+        if (err) throw err;
 
-            console.log("Employee added succesfully.");
+        inquirer
+          .prompt([
+            {
+              type: "input",
+              name: "firstName",
+              message: "What is the employee's first name?",
+              validate: function (value) {
+                if (value === "") {
+                  return false;
+                } else {
+                  return true;
+                }
+              },
+            },
+            {
+              type: "input",
+              name: "lastName",
+              message: "What is the employee's last name?",
+              validate: function (value) {
+                if (value === "") {
+                  return false;
+                } else {
+                  return true;
+                }
+              },
+            },
+            {
+              type: "list",
+              name: "role",
+              message: "What is the role of the new employee?",
+              choices: [
+                "Sales lead",
+                "Sales person",
+                "Lead engineer",
+                "Software engineer",
+                "Account manager",
+                "Account",
+                "Legal team members",
+              ],
+            },
+            {
+              type: "list",
+              name: "manager",
+              message: "Who is the employeer's manager?",
+              choices: ["name", "name", "name", "name"],
+            },
+          ])
+          .then((answers) => {
+            let roleId;
+            for (let i = 0; i < res.length; i++) {
+              if (res[i].title == answers.role) {
+                roleId = res[i].role_id;
+              }
+            }
+            let managerId;
+            for (let i = 0; i < res1.length; i++) {
+              if (res1[i].last_name == answers.manager) {
+                managerId = res1[i].employee_id;
+              }
+            }
+            connection.query(
+              "INSERT INTO employee SET ?",
+              {
+                first_name: answers.firstName,
+                last_name: answers.lastName,
+                role_id: roleId,
+                manager_id: managerId,
+              },
+              function (err) {
+                if (err) throw new Error(err);
 
-            promptUser();
-          }
-        );
+                console.log("Employee added succesfully.");
+
+                promptUser();
+              }
+            );
+          });
       });
+    });
   }
 
   // function addEmployee() {
@@ -201,7 +217,27 @@ function promptUser() {
   //   message:
   //     "Which employee's do you want set as manager for the selected employee?",
   //   choices: ["name", "name", "name", "name"],
-  // }
+  // }// [
+  //   "Sales lead",
+  //   "Sales person",
+  //   "Lead engineer",
+  //   "Software engineer",
+  //   "Account manager",
+  //   "Account",
+  //   "Legal team members",
+  // ],
+  // {
+  //   type: "list",
+  //   name: "department",
+  //   message: "What is the department of the new employee?",
+  //   choices: [
+  //     "Sales department",
+  //     "Engineering department",
+  //     "Financial department",
+  //     "Legal team",
+  //   ],
+  // },
+  //
 }
 console.clear();
 // viewAllEmployees();
