@@ -2,10 +2,7 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 const cTable = require("console.table");
-let deptArr = [];
-let roleArr = [];
-let emplArr = [];
-let managerArr = [];
+
 //Create the connection information for the sql database
 const connection = mysql.createConnection({
   host: "localhost",
@@ -35,10 +32,10 @@ const questions = [
     choices: [
       "View All Employees",
       "View Departments",
-      "View All Employees By Manager",
+      "View Employees By Manager",
       "Add Employee",
       // "Remove Employee",
-      "Update Employee Role",
+      "Update Employee roles",
       // "Update Manager Role",
       "Exit",
     ],
@@ -51,8 +48,8 @@ function promptUser() {
       case "View All Employees":
         viewAllEmployees();
         break;
-      case "View All Employees By Manager":
-        viewAllEmployeeByManager();
+      case "View Employees By Manager":
+        viewEmployeeByManager();
         break;
       case "View Departments":
         viewDepartments();
@@ -63,7 +60,7 @@ function promptUser() {
       case "Remove Employee":
         removeEmployee();
         break;
-      case "Update Employee Role":
+      case "Update Employee roles":
         updateEmployeeRole();
         break;
       case "Update Manager Role":
@@ -77,9 +74,6 @@ function promptUser() {
     }
   });
 
-  // getDept();
-  // getRole();
-  // getManager();
   function viewAllEmployees() {
     connection.query("SELECT * FROM employee", function (err, res) {
       if (err) throw err;
@@ -179,62 +173,45 @@ function promptUser() {
       promptUser();
     });
   }
-  // {
-  //   type: "list",
-  //   name: "role",
-  //   message: "What is the role?",
-  //   choices: [
-  //     "Sales lead",
-  //     "Sales person",
-  //     "Lead engineer",
-  //     "Software engineer",
-  //     "Account manager",
-  //     "Account",
-  //     "Legal team members",
-  //   ],
-  // },
-  //
-  // {
-  //   type: "list",
-  //   name: "remove_employee",
-  //   message: "Which employeer do you need to remove?",
-  //   choices: ["name", "name", "name", "name"],
-  // },
-  // {
-  //   type: "list",
-  //   name: "role_update",
-  //   message: "Which employee's manager do you want to update?",
-  //   choices: ["name", "name", "name", "name"],
-  // },
-  // {
-  //   type: "list",
-  //   name: "update_manager",
-  //   message:
-  //     "Which employee's do you want set as manager for the selected employee?",
-  //   choices: ["name", "name", "name", "name"],
-  // }// [
-  //   "Sales lead",
-  //   "Sales person",
-  //   "Lead engineer",
-  //   "Software engineer",
-  //   "Account manager",
-  //   "Account",
-  //   "Legal team members",
-  // ],
-  // {
-  //   type: "list",
-  //   name: "department",
-  //   message: "What is the department of the new employee?",
-  //   choices: [
-  //     "Sales department",
-  //     "Engineering department",
-  //     "Financial department",
-  //     "Legal team",
-  //   ],
-  // },
-  //
-  // })
+
+  function updateEmployeeRole() {
+    connection.query(
+      "SELECT DISTINCT(concat(first_name,' ',last_name)) id, first_name, last_name FROM employee",
+      function (err, res2) {
+        if (err) throw err;
+        const employeeChoices = res2.map(({ id }) => ({
+          value: id,
+          // name: `${role}`,
+        }));
+
+        connection.query(
+          "SELECT DISTINCT(concat(first_name,' ',last_name)) manager, id, first_name, last_name FROM employee",
+          function (err, res1) {
+            if (err) throw err;
+            const managerChoices = res1.map(({ id, manager }) => ({
+              value: id,
+              name: `${manager}`,
+            }));
+
+            inquirer.prompt([
+              {
+                type: "list",
+                name: "role_update",
+                message: "Which employee's manager do you want to update?",
+                choices: employeeChoices,
+              },
+              {
+                type: "list",
+                name: "update_manager",
+                message:
+                  "Which employee's do you want set as manager for the selected employee?",
+                choices: managerChoices,
+              },
+            ]);
+            promptUser();
+          }
+        );
+      }
+    );
+  }
 }
-//)}
-console.clear();
-// viewAllEmployees();
