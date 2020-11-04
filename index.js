@@ -98,74 +98,75 @@ function promptUser() {
         name: `${title}`,
       }));
 
-      // connection.query("SELECT * FROM employee", function (err, res1) {
-      //   if (err) throw err;
+      connection.query(
+        "SELECT DISTINCT(concat(first_name,' ',last_name)) manager, id, first_name, last_name FROM employee",
+        function (err, res1) {
+          if (err) throw err;
+          const managerChoices = res1.map(({ id, manager }) => ({
+            value: id,
+            name: `${manager}`,
+          }));
+          inquirer
+            .prompt([
+              {
+                type: "input",
+                name: "firstName",
+                message: "What is the employee's first name?",
+                validate: function (value) {
+                  if (value === "") {
+                    return false;
+                  } else {
+                    return true;
+                  }
+                },
+              },
+              {
+                type: "input",
+                name: "lastName",
+                message: "What is the employee's last name?",
+                validate: function (value) {
+                  if (value === "") {
+                    return false;
+                  } else {
+                    return true;
+                  }
+                },
+              },
+              {
+                type: "list",
+                name: "role",
+                message: "What is the role of the new employee?",
+                choices: roleChoices,
+              },
+              {
+                type: "list",
+                name: "manager",
+                message: "Who is the employeer's manager?",
+                choices: managerChoices,
+              },
+            ])
+            .then((answers) => {
+              // console.log(roleChoices[i]);
 
-      inquirer
-        .prompt([
-          {
-            type: "input",
-            name: "firstName",
-            message: "What is the employee's first name?",
-            // validate: function (value) {
-            //   if (value === "") {
-            //     return false;
-            //   } else {
-            //     return true;
-            //   }
-            // },
-          },
-          {
-            type: "input",
-            name: "lastName",
-            message: "What is the employee's last name?",
-            // validate: function (value) {
-            //   if (value === "") {
-            //     return false;
-            //   } else {
-            //     return true;
-            //   }
-            // },
-          },
-          {
-            type: "list",
-            name: "role",
-            message: "What is the role of the new employee?",
-            choices: roleChoices,
-          },
-          // {
-          //   type: "list",
-          //   name: "manager",
-          //   message: "Who is the employeer's manager?",
-          //   choices: ["name", "name", "name", "name"],
-          // },
-        ])
-        .then((answers) => {
-          // console.log(roleChoices[i]);
-          // let managerId;
-          // for (let i = 0; i < res1.length; i++) {
-          //   if (res1[i].last_name == answers.manager) {
-          //     managerId = res1[i].employee_id;
-          //   }
-          // }
-          connection.query(
-            "INSERT INTO employee SET ?",
-            {
-              first_name: answers.firstName,
-              last_name: answers.lastName,
-              role_id: answers.role,
-              // manager_id: managerId,
-            },
-            function (err) {
-              if (err) throw new Error(err);
+              connection.query(
+                "INSERT INTO employee SET ?",
+                {
+                  first_name: answers.firstName,
+                  last_name: answers.lastName,
+                  role_id: answers.role,
+                  manager_id: answers.manager,
+                },
+                function (err) {
+                  if (err) throw new Error(err);
 
-              console.log("Employee added succesfully.");
+                  console.log("Employee added succesfully.");
 
-              promptUser();
-            }
-          );
-        });
-      //});
+                  promptUser();
+                }
+              );
+            });
+        }
+      );
     });
   }
 
@@ -230,6 +231,8 @@ function promptUser() {
   //   ],
   // },
   //
+  // })
 }
+//)}
 console.clear();
 // viewAllEmployees();
