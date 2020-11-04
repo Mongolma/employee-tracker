@@ -179,9 +179,9 @@ function promptUser() {
       "SELECT DISTINCT(concat(first_name,' ',last_name)) id, first_name, last_name FROM employee",
       function (err, res2) {
         if (err) throw err;
-        const employeeChoices = res2.map(({ id }) => ({
+        const employeeChoices = res2.map(({ id, first_name, last_name }) => ({
           value: id,
-          // name: `${role}`,
+          name: `${first_name} ${last_name}`,
         }));
 
         connection.query(
