@@ -34,12 +34,12 @@ const questions = [
     message: "What would you like to do?",
     choices: [
       "View All Employees",
-      "View All Employees By Department",
+      "View Departments",
       "View All Employees By Manager",
       "Add Employee",
-      "Remove Employee",
+      // "Remove Employee",
       "Update Employee Role",
-      "Update Manager Role",
+      // "Update Manager Role",
       "Exit",
     ],
   },
@@ -54,8 +54,8 @@ function promptUser() {
       case "View All Employees By Manager":
         viewAllEmployeeByManager();
         break;
-      case "View All Employees By Department":
-        viewAllEmployeesByDepartment();
+      case "View Departments":
+        viewDepartments();
         break;
       case "Add Employee":
         addEmployee();
@@ -146,8 +146,6 @@ function promptUser() {
               },
             ])
             .then((answers) => {
-              // console.log(roleChoices[i]);
-
               connection.query(
                 "INSERT INTO employee SET ?",
                 {
@@ -170,13 +168,17 @@ function promptUser() {
     });
   }
 
-  // function addEmployee() {
-  //   connection.query("SELECT * FROM department", function (err, res) {
-  //     if (err) {
-
-  //     }
-  //   });
-  //
+  function viewDepartments() {
+    connection.query("SELECT * FROM department first_name", function (
+      err,
+      res
+    ) {
+      if (err) throw err;
+      console.table(res);
+      connection.end();
+      promptUser();
+    });
+  }
   // {
   //   type: "list",
   //   name: "role",
