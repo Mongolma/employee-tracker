@@ -183,7 +183,7 @@ function promptUser() {
           value: id,
           name: `${first_name} ${last_name}`,
         }));
-
+        console.log(employeeChoices);
         connection.query(
           "SELECT DISTINCT(concat(first_name,' ',last_name)) manager, id, first_name, last_name FROM employee",
           function (err, res1) {
@@ -193,21 +193,38 @@ function promptUser() {
               name: `${manager}`,
             }));
 
-            inquirer.prompt([
-              {
-                type: "list",
-                name: "role_update",
-                message: "Which employee's manager do you want to update?",
-                choices: employeeChoices,
-              },
-              {
-                type: "list",
-                name: "update_manager",
-                message:
-                  "Which employee's do you want set as manager for the selected employee?",
-                choices: managerChoices,
-              },
-            ]);
+            inquirer
+              .prompt([
+                {
+                  type: "list",
+                  name: "role_update",
+                  message: "Which employee's manager do you want to update?",
+                  choices: employeeChoices,
+                },
+                {
+                  type: "list",
+                  name: "update_manager",
+                  message:
+                    "Which employee's do you want set as manager for the selected employee?",
+                  choices: managerChoices,
+                },
+              ])
+              .then((answers) => {
+                connection.query(
+                  "UPDATE employee SET role_id = ? WHERE id = ?",
+                  {
+                    first_name: answers.firstName,
+                    last_name: answers.lastName,
+                    role_id: answers.role_update,
+                    manager_id: answers.update_manager,
+                  },
+                  function (err) {
+                    if (err) throw new Error(err);
+
+                    console.log("Employee added succesfully.");
+                  }
+                );
+              });
             promptUser();
           }
         );
