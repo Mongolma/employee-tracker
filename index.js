@@ -221,11 +221,11 @@ function promptUser() {
                   function (err) {
                     if (err) throw new Error(err);
 
-                    console.log("Employee added succesfully.");
+                    console.log("Employee role updated succesfully.");
                   }
                 );
               });
-            promptUser();
+            // promptUser();
           }
         );
       }
