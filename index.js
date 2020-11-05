@@ -32,11 +32,8 @@ const questions = [
     choices: [
       "View All Employees",
       "View Departments",
-      "View Employees By Manager",
       "Add Employee",
-      // "Remove Employee",
       "Update Employee roles",
-      // "Update Manager Role",
       "Exit",
     ],
   },
@@ -48,23 +45,14 @@ function promptUser() {
       case "View All Employees":
         viewAllEmployees();
         break;
-      case "View Employees By Manager":
-        viewEmployeeByManager();
-        break;
       case "View Departments":
         viewDepartments();
         break;
       case "Add Employee":
         addEmployee();
         break;
-      case "Remove Employee":
-        removeEmployee();
-        break;
       case "Update Employee roles":
         updateEmployeeRole();
-        break;
-      case "Update Manager Role":
-        updateManagerRole();
         break;
       case "Exit":
         connection.end();
@@ -77,9 +65,7 @@ function promptUser() {
   function viewAllEmployees() {
     connection.query("SELECT * FROM employee", function (err, res) {
       if (err) throw err;
-      // Log all results of the SELECT statement
       console.table(res);
-      connection.end();
       promptUser();
     });
   }
@@ -169,7 +155,6 @@ function promptUser() {
     ) {
       if (err) throw err;
       console.table(res);
-      connection.end();
       promptUser();
     });
   }
@@ -183,7 +168,7 @@ function promptUser() {
           value: id,
           name: `${first_name} ${last_name}`,
         }));
-        console.log(employeeChoices);
+        // console.log(employeeChoices);
         connection.query(
           "SELECT DISTINCT(concat(first_name,' ',last_name)) manager, id, first_name, last_name FROM employee",
           function (err, res1) {
@@ -211,7 +196,7 @@ function promptUser() {
               ])
               .then((answers) => {
                 const [first_name, last_name] = answers.role_update.split(" ");
-               
+
                 connection.query(
                   "UPDATE employee SET manager_id = ? WHERE first_name = ? AND last_name = ?",
 
@@ -221,10 +206,10 @@ function promptUser() {
                     if (err) throw new Error(err);
 
                     console.log("Employee role updated succesfully.");
+                    promptUser();
                   }
                 );
               });
-            // promptUser();
           }
         );
       }
