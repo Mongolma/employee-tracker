@@ -210,14 +210,13 @@ function promptUser() {
                 },
               ])
               .then((answers) => {
+                const [first_name, last_name] = answers.role_update.split(" ");
+               
                 connection.query(
-                  "UPDATE employee SET role_id = ? WHERE id = ?",
-                  {
-                    first_name: answers.firstName,
-                    last_name: answers.lastName,
-                    role_id: answers.role_update,
-                    manager_id: answers.update_manager,
-                  },
+                  "UPDATE employee SET manager_id = ? WHERE first_name = ? AND last_name = ?",
+
+                  [answers.update_manager, first_name, last_name],
+
                   function (err) {
                     if (err) throw new Error(err);
 

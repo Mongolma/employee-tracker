@@ -10,4 +10,7 @@ Anyone who wants to use this app can take the source code from my Github reposit
 
 ## Usage
 
-When you start running this app you will be presented 
+In order to run this app you need to create databases and tables with schema.sql which is in the source file.
+
+## The URL of the GitHub repository: 
+https://github.com/Mongolma/employee-tracker
